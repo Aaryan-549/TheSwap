@@ -1,220 +1,151 @@
-# Custom Token Swap Marketplace (Uniswap Exchange) DApp
+# PokéSwap: Pokémon-Themed Token Exchange
 
-Building a Custom Token Swap Marketplace (Uniswap Exchange) using Next.js, Solidity, and React.js Build your Uniswap Token Marketplace start-up, in which you can provide users to Swap any ERC20 token, and allow them to buy tokens.
+PokéSwap is a decentralized exchange platform focused on Pokémon-themed ERC20 tokens. Built with Next.js, Solidity, and TailwindCSS, this project demonstrates Web3 development skills and provides a fun, themed trading experience.
 
-## Project Overview
+![TheSwap Screenshot](./public/TheSwap-screenshot.png)
 
-![alt text](https://www.daulathussain.com/wp-content/uploads/2023/08/uniswap-token-marketplace.jpg)
+## Features
 
-## Instruction
+- **Swap Pokémon Tokens**: Exchange between various Pokémon-themed ERC20 tokens or ETH
+- **Token Portfolio**: View your token balances and portfolio value
+- **Real-time Balance Updates**: See your wallet balances update in real-time
+- **Interactive UI**: Smooth animations and transitions for a modern user experience
+- **Mobile Responsive**: Fully responsive design works on all device sizes
 
-Kindly follow the following Instructions to run the project in your system and install the necessary requirements
+## Pokémon Token Collection
 
-- [Final Source Code](https://www.theblockchaincoders.com/sourceCode/uniswap-token-marketplace-dapp)
+PokéSwap features various Pokémon-themed tokens:
 
-#### Setup Video
+- **Pika USD**: Pikachu-themed stablecoin
+- **Bulba Coin**: Grass-type token
+- **USD Chard**: Fire-type token
+- **squirtleETH**: Water-type token
+- **Pidgey Token**: Flying-type token
+- **MewtwoETH**: Psychic-type token
+- **Gengar INR**: Ghost-type token
+- **Eevee Token**: Normal-type token
 
-- [Final Code Setup video](https://youtu.be/UHjJwa8TiQs?si=EzdPof1eUA37Nhtt)
+## Project Tech Stack
 
-```
-   URL: https://youtu.be/UHjJwa8TiQs?si=EzdPof1eUA37Nhtt
-   WATCH: Setup & Demo Of Project
-```
+- **Frontend**: Next.js, React, TailwindCSS, Framer Motion
+- **Smart Contracts**: Solidity, Hardhat
+- **Web3 Integration**: ethers.js, wagmi
+- **Network**: Holesky Testnet
 
-#### Install Vs Code Editor
+## Live Demo
 
-```
-  URL: https://code.visualstudio.com/download
-  GET: VsCode Editor
-```
+Try the live demo of TheSwap: [THeSwap Live Demo](#)
 
-#### NodeJs & NPM Version
+## Installation
 
-```
-  URL: https://nodejs.org/en/download
-  NodeJs: v18.12.1
-  NPM: 8.19.2
-```
+Follow these steps to run the PokéSwap project locally:
 
-#### Clone Starter File
+### Prerequisites
 
-```
-  URL:https://github.com/daulathussain/uniswap-tokem-marketplace-starter-file
-  GET: Project Starter File Download
-```
+- Node.js (v18.12.1 or higher)
+- npm (8.19.2 or higher)
+- MetaMask or any Web3 wallet
+- Holesky testnet ETH (for testing transactions)
 
-All you need to follow the complete project and follow the instructions which are explained in the tutorial by Daulat
+### Setup Instructions
 
-## Final Code Instruction
+1. Clone the repository:
 
-If you download the final source code then you can follow the following instructions to run the Dapp successfully
-
-#### Setup Video
-
-```
-   URL: https://youtu.be/UHjJwa8TiQs?si=EzdPof1eUA37Nhtt
-   WATCH: Setup & Demo Of Project
-```
-
-#### Final Source Code
-
-```
-   FINAL SOURCE CODE: https://www.theblockchaincoders.com/sourceCode/uniswap-token-marketplace-dapp
-   ALL SOURCE CODE: https://www.theblockchaincoders.com/SourceCode
-   Download the Final Source Code
+```bash
+git clone https://github.com/Aaryan-549/TheSwap.git
+cd TheSwap
 ```
 
-#### Install Vs Code Editor
+2. Install dependencies:
 
-```
-  URL: https://code.visualstudio.com/download
-  GET: VsCode Editor
-```
-
-#### NodeJs & NPM Version
-
-```
-  URL: https://nodejs.org/en/download
-  NodeJs: v18.12.1
-  NPM: 8.19.2
+```bash
+npm install
 ```
 
-#### WAGMI WALLET
+3. Create a `.env.local` file in the root directory with the following variables:
 
 ```
-  URL CHAINS: https://wagmi.sh/react/api/chains
-  WEBSITE: https://wagmi.sh/
-  DOC: https://wagmi.sh/react/getting-started
+NEXT_PUBLIC_MARKETPLACE_ADDRESS=0xYourDeployedContractAddress
+NEXT_PUBLIC_HOLESKY_RPC_URL=https://rpc.ankr.com/eth_holesky
 ```
 
-#### Test Faucets
+4. Start the development server:
 
-Google will provide you with some free test faucets which you can transfer to your wallet address for deploying the contract
-
-```
-  URL: https://cloud.google.com/application/web3/faucet
-  Get: Free Test Faucets
+```bash
+npm run dev
 ```
 
-#### RemixID
+5. Open your browser and navigate to http://localhost:3000
 
-We are using RemixID for deploying the contract and generation of the ABI in the project, but you can use any other tools like Hardhat, etc.
+## Smart Contracts
 
-```
-  URL: https://remix-project.org
-  OPEN: RemixID
-```
+The project includes the following main smart contracts:
 
-## Important Links
+- **CustomToken.sol**: ERC20 token implementation for Pokémon tokens
+- **CustomDex.sol**: DEX contract handling token swaps and liquidity
 
-- [Get Pro Blockchain Developer Course](https://www.theblockchaincoders.com/pro-nft-marketplace)
-- [Support Creator](https://bit.ly/Support-Creator)
-- [All Projects Source Code](https://www.theblockchaincoders.com/SourceCode)
+### Contract Addresses (Holesky Testnet)
 
-## Authors
+- DEX Contract: [`0xYourDexContractAddress`](https://holesky.etherscan.io/address/0xYourDexContractAddress)
+- Pika USD: [`0xPikaUSDAddress`](https://holesky.etherscan.io/address/0xPikaUSDAddress)
+- Bulba Coin: [`0xBulbaCoinAddress`](https://holesky.etherscan.io/address/0xBulbaCoinAddress)
+- And more...
 
-- [@theblockchaincoders.com](https://www.theblockchaincoders.com/)
-- [@consultancy](https://www.theblockchaincoders.com/consultancy)
-- [@youtube](https://www.youtube.com/@daulathussain)
+## Getting Testnet Tokens
 
-#### ENVIROMENT VARIABLES
+To test the application, you'll need Holesky testnet ETH:
 
-```
-  NEXT_PUBLIC_MARKETPLACE_ADDRESS = 0xd55fffb30a6af39A6705e52d172eAf77baC73aA2
+1. Get testnet ETH from [Holesky Faucet](https://faucet.holesky.ethpandaops.io/)
+2. Connect your wallet to PokéSwap
+3. Use the swap feature to exchange ETH for Pokémon tokens
 
-  # SEPOLIA RPC URL
-  NEXT_PUBLIC_SEPOLIA_URL = https://rpc.ankr.com/eth_sepolia
+## Development
 
-  # HOLESKY RPC URL
-  NEXT_PUBLIC_HOLESKY_RPC_URL = https://rpc.ankr.com/eth_holesky
-```
+### Deploy Your Own Version
 
-#### HOLESKY NETWORK
+1. Deploy the smart contracts to Holesky testnet:
 
-```
-  const { chains, provider } = configureChains(
-  [
-    {
-      id: 17000,
-      name: "Holesky",
-      network: "holesky",
-      nativeCurrency: {
-        name: "Holesky Ether",
-        symbol: "ETH",
-        decimals: 18,
-      },
-      rpcUrls: {
-        default: {
-          http: [`${HOLESKY}`],
-        },
-        public: {
-          http: [`${HOLESKY}`],
-        },
-      },
-      blockExplorers: {
-        default: {
-          name: "Holescan",
-          url: "https://holesky.etherscan.io/",
-        },
-      },
-      testnet: true,
-    },
-  ],
-  [
-    jsonRpcProvider({
-      rpc: (chain) => {
-        if (chain.id === 17000) {
-          return { http: `${HOLESKY}` };
-        }
-        return null;
-      },
-      priority: 1,
-    }),
-  ]
-);
+```bash
+npx hardhat run scripts/deploy.js --network holesky
 ```
 
-#### SEPOLIA NETWORK
+2. Update the contract addresses in your `.env.local` file
+
+### Project Structure
 
 ```
- const { chains, provider } = configureChains(
-  [
-    {
-      id: 11155111,
-      name: "Sepolia",
-      network: "sepolia",
-      nativeCurrency: {
-        name: "Sepolia Ether",
-        symbol: "ETH",
-        decimals: 18,
-      },
-      rpcUrls: {
-        default: {
-          http: [`${SEPOLIA}`],
-        },
-        public: {
-          http: [`${SEPOLIA}`],
-        },
-      },
-      blockExplorers: {
-        default: {
-          name: "Etherscan",
-          url: "https://sepolia.etherscan.io",
-        },
-      },
-      testnet: true,
-    },
-  ],
-  [
-    jsonRpcProvider({
-      rpc: (chain) => {
-        if (chain.id === 11155111) {
-          return { http: `${SEPOLIA}` };
-        }
-        return null;
-      },
-      priority: 1,
-    }),
-  ]
-);
+├── components/          # React components
+├── contracts/           # Solidity smart contracts
+├── pages/               # Next.js pages
+├── public/              # Static assets
+├── scripts/             # Deployment scripts
+├── styles/              # CSS styles
+├── utils/               # Utility functions
+└── test/                # Contract tests
 ```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Contact
+
+Aaryan Beniwal - [abeniwal_be23@thapar.edu](mailto:abeniwal_be23@thapar.edu)
+
+Project Link: [https://github.com/Aaryan-549/TheSwap](https://github.com/Aaryan-549/TheSwap)
+
+## Acknowledgments
+
+- Inspired by Pokémon and the world of decentralized finance
+- Built for educational purposes to demonstrate Web3 development skills
+- Special thanks to the Ethereum and Next.js communities for their excellent documentation
