@@ -72,7 +72,8 @@ const HeroSection = () => {
             </div>
           </div>
           
-          <div className="w-full max-w-md hover:scale-[1.02] transition-transform duration-500">
+          {/* Added higher z-index to make sure swap boxes are visible */}
+          <div className="w-full max-w-md hover:scale-[1.02] transition-transform duration-500 relative z-20">
             <SwapComponent />
           </div>
         </div>
