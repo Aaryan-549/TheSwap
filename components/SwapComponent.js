@@ -7,7 +7,6 @@ import {
   swapTokenToToken,
 } from "../utils/context";
 
-import dynamic from 'next/dynamic';
 import { ChevronDoubleDownIcon } from "@heroicons/react/solid";
 import SwapField from "./SwapField";
 import TransactionStatus from "./TransactionStatus";
@@ -16,16 +15,7 @@ import { DEFAULT_VALUE, ETH, COIN_1 } from "../utils/saleToken";
 import { toEth, toWei } from "../utils/utils";
 import { useAccount } from "wagmi";
 
-// Dynamically import motion components with SSR disabled
-const MotionDiv = dynamic(
-  () => import('framer-motion').then((mod) => mod.motion.div),
-  { ssr: false }
-);
-
-const MotionButton = dynamic(
-  () => import('framer-motion').then((mod) => mod.motion.button),
-  { ssr: false }
-);
+// No Framer Motion import
 
 const SwapComponent = () => {
   // Initialize with ETH and an actual token (not DEFAULT_VALUE)
@@ -41,6 +31,8 @@ const SwapComponent = () => {
   const isReversed = useRef(false);
   const [mounted, setMounted] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
+  const [btnHovered, setBtnHovered] = useState(false);
+  const [btnPressed, setBtnPressed] = useState(false);
 
   const INCREASE_ALLOWANCE = "Increase allowance";
   const ENTER_AMOUNT = "Enter an amount";
@@ -133,64 +125,82 @@ const SwapComponent = () => {
     return <div className="h-96 w-full bg-gray-800 rounded-2xl animate-pulse"></div>;
   }
 
-  // Only use animation if we're on the client side and mounted
-  const containerComponent = mounted ? (
-    <MotionDiv 
-      className="border-none rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 w-full p-1 shadow-lg shadow-teal-900/20"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
+  return (
+    <div className="border-none rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 w-full p-1 shadow-lg shadow-teal-900/20">
       <div className="bg-gray-900 rounded-2xl p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white">Swap Now!</h2>
         </div>
         
         <div className="relative">
-          <MotionDiv 
+          {/* First swap field */}
+          <div 
             className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            style={{ 
+              opacity: 1,
+              transform: 'translateY(0)',
+              transition: 'opacity 0.3s ease, transform 0.3s ease'
+            }}
           >
             {srcTokenComp}
-          </MotionDiv>
+          </div>
           
           {/* Centered arrow that overlaps both boxes */}
           <div className="absolute left-1/2 top-full z-10 transform -translate-x-1/2 -translate-y-1/2">
-            <MotionButton 
-              className="p-2 bg-teal-500 rounded-full cursor-pointer hover:bg-teal-400 transition-all duration-300"
-              whileHover={{ scale: 1.1 }}
-              animate={{ rotate: isRotating ? 180 : 0 }}
-              transition={{ duration: 0.1 }}
+            <button 
+              className="p-2 bg-teal-500 hover:bg-teal-400 rounded-full cursor-pointer transition-all duration-200"
+              style={{ 
+                transform: `rotate(${isRotating ? 180 : 0}deg) scale(${btnHovered ? 1.1 : 1})`,
+                transition: 'transform 0.2s ease, background-color 0.2s ease'
+              }}
+              onMouseEnter={() => setBtnHovered(true)}
+              onMouseLeave={() => {
+                setBtnHovered(false);
+                setBtnPressed(false);
+              }}
               onClick={handleReverseExchange}
             >
               <ChevronDoubleDownIcon className="h-5 w-5 text-gray-900" />
-            </MotionButton>
+            </button>
           </div>
         </div>
 
-        <MotionDiv 
+        {/* Second swap field */}
+        <div 
           className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300 mt-2"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
+          style={{ 
+            opacity: 1,
+            transform: 'translateY(0)',
+            transition: 'opacity 0.3s ease, transform 0.3s ease',
+            transitionDelay: '0.1s'
+          }}
         >
           {destTokenComp}
-        </MotionDiv>
+        </div>
 
         <div className="mt-8">
-          <MotionButton
+          <button
             className={getSwapBtnClassName()}
-            whileHover={swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE ? { scale: 1.02 } : {}}
-            whileTap={swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE ? { scale: 0.98 } : {}}
+            style={{ 
+              transform: (btnHovered && (swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE)) 
+                ? (btnPressed ? 'scale(0.98)' : 'scale(1.02)') 
+                : 'scale(1)',
+              transition: 'transform 0.2s ease, background 0.2s ease'
+            }}
+            onMouseEnter={() => setBtnHovered(true)}
+            onMouseLeave={() => {
+              setBtnHovered(false);
+              setBtnPressed(false);
+            }}
+            onMouseDown={() => setBtnPressed(true)}
+            onMouseUp={() => setBtnPressed(false)}
             onClick={() => {
               if (swapBtnText === INCREASE_ALLOWANCE) handleIncreaseAllowance();
               else if (swapBtnText === SWAP) handleSwap();
             }}
           >
             {swapBtnText}
-          </MotionButton>
+          </button>
         </div>
 
         {txPending && <TransactionStatus />}
@@ -201,13 +211,8 @@ const SwapComponent = () => {
          Your One Click Solution To Swapping Pokémon Tokens!
         </div>
       </div>
-    </MotionDiv>
-  ) : (
-    // Fallback for server-side rendering
-    <div className="h-96 w-full bg-gray-800 rounded-2xl animate-pulse"></div>
+    </div>
   );
-
-  return containerComponent;
 
   async function handleSwap() {
     if (srcToken === ETH && destToken !== ETH) {

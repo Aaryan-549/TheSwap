@@ -1,16 +1,4 @@
 {
-  "../components/SwapComponent.js -> framer-motion": {
-    "id": "../components/SwapComponent.js -> framer-motion",
-    "files": [
-      "static/chunks/node_modules_framer-motion_dist_es_index_mjs.js"
-    ]
-  },
-  "../components/SwapField.js -> framer-motion": {
-    "id": "../components/SwapField.js -> framer-motion",
-    "files": [
-      "static/chunks/node_modules_framer-motion_dist_es_index_mjs.js"
-    ]
-  },
   "../components/index.js -> ./Card": {
     "id": "../components/index.js -> ./Card",
     "files": [
