@@ -68,6 +68,7 @@ const SwapComponent = () => {
 
   useEffect(() => {
     setMounted(true);
+    console.log("Component mounted");
     
     // Initialize with valid tokens to prevent dropdown errors
     if (destToken === DEFAULT_VALUE) {
@@ -94,7 +95,7 @@ const SwapComponent = () => {
     )
       populateOutputValue(inputValue);
 
-    setSrcTokenComp(<SwapField obj={srcTokenObj} ref={inputValueRef} className='z-10' />);
+    setSrcTokenComp(<SwapField obj={srcTokenObj} ref={inputValueRef} />);
 
     if (inputValue?.length === 0) setOutputValue("");
   }, [inputValue, destToken, mounted]);
@@ -123,8 +124,8 @@ const SwapComponent = () => {
   }
 
   return (
-    <div className="border-none rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 w-full p-1 shadow-lg shadow-teal-900/20">
-      <div className="bg-gray-900 rounded-2xl p-6 shadow-2xl">
+    <div className="border-none rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 w-full p-1 shadow-lg shadow-teal-900/20 relative" style={{ zIndex: 50 }}>
+      <div className="bg-gray-900 rounded-2xl p-6 shadow-2xl relative" style={{ zIndex: 50 }}>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white">Swap Now!</h2>
           <div className="flex items-center space-x-2">
@@ -132,18 +133,19 @@ const SwapComponent = () => {
           </div>
         </div>
         
-        <div className="relative">
+        <div className="relative" style={{ zIndex: 60 }}>
           <motion.div 
-            className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300"
+            className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300 relative"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
+            style={{ zIndex: 60 }}
           >
             {srcTokenComp}
           </motion.div>
           
           {/* Centered arrow that overlaps both boxes */}
-          <div className="absolute left-1/2 top-full z-10 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute left-1/2 top-full transform -translate-x-1/2 -translate-y-1/2" style={{ zIndex: 70 }}>
             <motion.div 
               className="p-2 bg-teal-500 rounded-full cursor-pointer hover:bg-teal-400 transition-all duration-300"
               whileHover={{ scale: 1.1 }}
@@ -157,15 +159,16 @@ const SwapComponent = () => {
         </div>
 
         <motion.div 
-          className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300 mt-2"
+          className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300 mt-2 relative"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
+          style={{ zIndex: 60 }}
         >
           {destTokenComp}
         </motion.div>
 
-        <div className="mt-8">
+        <div className="mt-8 relative" style={{ zIndex: 50 }}>
           <motion.button
             className={getSwapBtnClassName()}
             whileHover={{ scale: swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE ? 1.02 : 1 }}
@@ -187,6 +190,9 @@ const SwapComponent = () => {
          Your One Click Solution To Swapping Pokémon Tokens!
         </div>
       </div>
+      
+      {/* Overlay div to ensure proper dropdown rendering */}
+      <div id="dropdown-portal" className="absolute top-0 left-0 w-full" style={{ zIndex: 1000 }}></div>
     </div>
   );
 
