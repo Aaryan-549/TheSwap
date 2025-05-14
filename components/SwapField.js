@@ -31,9 +31,7 @@ const SwapField = React.forwardRef(({ obj }, inputRef) => {
         <label className='text-xs text-gray-500'>
           {id === 'srcToken' ? 'You Pay' : 'You Receive'}
         </label>
-        <div className='text-xs text-gray-500'>
-          Balance: 0.00
-        </div>
+      
       </div>
       
       <div className='flex items-center justify-between'>
