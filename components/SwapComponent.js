@@ -7,6 +7,7 @@ import {
   swapTokenToToken,
 } from "../utils/context";
 
+import dynamic from 'next/dynamic';
 import { ChevronDoubleDownIcon } from "@heroicons/react/solid";
 import SwapField from "./SwapField";
 import TransactionStatus from "./TransactionStatus";
@@ -14,7 +15,17 @@ import toast, { Toaster } from "react-hot-toast";
 import { DEFAULT_VALUE, ETH, COIN_1 } from "../utils/saleToken";
 import { toEth, toWei } from "../utils/utils";
 import { useAccount } from "wagmi";
-import { motion } from "framer-motion";
+
+// Dynamically import motion components with SSR disabled
+const MotionDiv = dynamic(
+  () => import('framer-motion').then((mod) => mod.motion.div),
+  { ssr: false }
+);
+
+const MotionButton = dynamic(
+  () => import('framer-motion').then((mod) => mod.motion.button),
+  { ssr: false }
+);
 
 const SwapComponent = () => {
   // Initialize with ETH and an actual token (not DEFAULT_VALUE)
@@ -65,8 +76,6 @@ const SwapComponent = () => {
 
   const { address } = useAccount();
 
-  // Fix for SSR with framer-motion - use dynamic import
-  // This ensures Framer Motion only loads client-side
   useEffect(() => {
     setMounted(true);
     console.log("SwapComponent mounted");
@@ -96,12 +105,7 @@ const SwapComponent = () => {
     )
       populateOutputValue(inputValue);
 
-    // Ensure the SwapField is directly rendered with the props
-    setSrcTokenComp(
-      <div className="bg-gray-800 rounded-xl p-4">
-        <SwapField obj={srcTokenObj} ref={inputValueRef} />
-      </div>
-    );
+    setSrcTokenComp(<SwapField obj={srcTokenObj} ref={inputValueRef} />);
 
     if (inputValue?.length === 0) setOutputValue("");
   }, [inputValue, destToken, mounted]);
@@ -116,12 +120,7 @@ const SwapComponent = () => {
     )
       populateInputValue(outputValue);
 
-    // Ensure the SwapField is directly rendered with the props
-    setDestTokenComp(
-      <div className="bg-gray-800 rounded-xl p-4">
-        <SwapField obj={destTokenObj} ref={outputValueRef} />
-      </div>
-    );
+    setDestTokenComp(<SwapField obj={destTokenObj} ref={outputValueRef} />);
 
     if (outputValue?.length === 0) setInputValue("");
 
@@ -134,70 +133,54 @@ const SwapComponent = () => {
     return <div className="h-96 w-full bg-gray-800 rounded-2xl animate-pulse"></div>;
   }
 
-  // Safe framer-motion variants that work in production
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.3 } }
-  };
-
-  const topFieldVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
-  };
-
-  const bottomFieldVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3, delay: 0.1 } }
-  };
-
-  return (
-    <motion.div 
+  // Only use animation if we're on the client side and mounted
+  const containerComponent = mounted ? (
+    <MotionDiv 
       className="border-none rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 w-full p-1 shadow-lg shadow-teal-900/20"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
     >
-      <div className="bg-gray-900 rounded-2xl p-6 shadow-2xl relative">
+      <div className="bg-gray-900 rounded-2xl p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white">Swap Now!</h2>
         </div>
         
-        <div className="space-y-10 relative">
-          {/* First swap field */}
-          <motion.div 
-            variants={topFieldVariants}
-            className="relative"
+        <div className="relative">
+          <MotionDiv 
+            className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
           >
             {srcTokenComp}
-          </motion.div>
+          </MotionDiv>
           
-          {/* Center Arrow - using standard div for the container to ensure it works */}
-          <div className="h-0 relative">
-            <div className="absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2 z-10">
-              <motion.button 
-                className="p-2 bg-teal-500 rounded-full cursor-pointer hover:bg-teal-400 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                animate={{ rotate: isRotating ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-                onClick={handleReverseExchange}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <ChevronDoubleDownIcon className="h-5 w-5 text-gray-900" />
-              </motion.button>
-            </div>
+          {/* Centered arrow that overlaps both boxes */}
+          <div className="absolute left-1/2 top-full z-10 transform -translate-x-1/2 -translate-y-1/2">
+            <MotionButton 
+              className="p-2 bg-teal-500 rounded-full cursor-pointer hover:bg-teal-400 transition-all duration-300"
+              whileHover={{ scale: 1.1 }}
+              animate={{ rotate: isRotating ? 180 : 0 }}
+              transition={{ duration: 0.1 }}
+              onClick={handleReverseExchange}
+            >
+              <ChevronDoubleDownIcon className="h-5 w-5 text-gray-900" />
+            </MotionButton>
           </div>
-          
-          {/* Second swap field */}
-          <motion.div 
-            variants={bottomFieldVariants}
-            className="relative"
-          >
-            {destTokenComp}
-          </motion.div>
         </div>
 
+        <MotionDiv 
+          className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300 mt-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          {destTokenComp}
+        </MotionDiv>
+
         <div className="mt-8">
-          <motion.button
+          <MotionButton
             className={getSwapBtnClassName()}
             whileHover={swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE ? { scale: 1.02 } : {}}
             whileTap={swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE ? { scale: 0.98 } : {}}
@@ -207,19 +190,24 @@ const SwapComponent = () => {
             }}
           >
             {swapBtnText}
-          </motion.button>
+          </MotionButton>
         </div>
 
         {txPending && <TransactionStatus />}
-        
+
         <Toaster />
         
         <div className="mt-4 text-xs text-gray-500 text-center">
          Your One Click Solution To Swapping Pokémon Tokens!
         </div>
       </div>
-    </motion.div>
+    </MotionDiv>
+  ) : (
+    // Fallback for server-side rendering
+    <div className="h-96 w-full bg-gray-800 rounded-2xl animate-pulse"></div>
   );
+
+  return containerComponent;
 
   async function handleSwap() {
     if (srcToken === ETH && destToken !== ETH) {
@@ -256,15 +244,11 @@ const SwapComponent = () => {
 
     // 1. Swap tokens (srcToken <-> destToken)
     // 2. Swap values (inputValue <-> outputValue)
-    const tempInput = inputValue;
-    const tempOutput = outputValue;
-    const tempSrcToken = srcToken;
-    const tempDestToken = destToken;
-    
-    setInputValue(tempOutput);
-    setOutputValue(tempInput);
-    setSrcToken(tempDestToken);
-    setDestToken(tempSrcToken);
+    setInputValue(outputValue);
+    setOutputValue(inputValue);
+
+    setSrcToken(destToken);
+    setDestToken(srcToken);
   }
 
   function getSwapBtnClassName() {

@@ -1,9 +1,16 @@
 import React from 'react'
 import Selector from './Selector'
-import { motion } from 'framer-motion'
+import dynamic from 'next/dynamic'
+
+// Dynamically import motion components with SSR disabled
+const MotionButton = dynamic(
+  () => import('framer-motion').then((mod) => mod.motion.button),
+  { ssr: false }
+);
 
 const SwapField = React.forwardRef(({ obj }, inputRef) => {
   const { id, value = '', setValue, defaultValue, setToken, ignoreValue } = obj
+  const [mounted, setMounted] = React.useState(false);
 
   // Validate that all required props exist
   React.useEffect(() => {
@@ -13,6 +20,7 @@ const SwapField = React.forwardRef(({ obj }, inputRef) => {
       if (!defaultValue) console.warn('SwapField missing defaultValue');
       if (setValue === undefined) console.warn('SwapField missing setValue function');
     }
+    setMounted(true);
   }, [id, setValue, setToken, defaultValue]);
 
   // Function definition moved up before it's used in JSX
@@ -21,6 +29,22 @@ const SwapField = React.forwardRef(({ obj }, inputRef) => {
       'w-full outline-none h-9 appearance-none text-2xl bg-transparent text-white placeholder-gray-500'
     return className
   }
+
+  // For server-side rendering, use a simple button
+  const MaxButton = mounted ? (
+    <MotionButton 
+      className='text-xs text-teal-500 hover:text-teal-400 font-medium transition-colors'
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => setValue('1.0')}
+    >
+      MAX
+    </MotionButton>
+  ) : (
+    <button className='text-xs text-teal-500 hover:text-teal-400 font-medium transition-colors'>
+      MAX
+    </button>
+  );
 
   return (
     <div className='flex flex-col'>
@@ -55,14 +79,7 @@ const SwapField = React.forwardRef(({ obj }, inputRef) => {
       </div>
       
       <div className='flex justify-end mt-1'>
-        <motion.button 
-          className='text-xs text-teal-500 hover:text-teal-400 font-medium transition-colors'
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setValue('1.0')}
-        >
-          MAX
-        </motion.button>
+        {MaxButton}
       </div>
     </div>
   )
