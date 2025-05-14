@@ -15,6 +15,13 @@ const SwapField = React.forwardRef(({ obj }, inputRef) => {
     }
   }, [id, setValue, setToken, defaultValue]);
 
+  // Function definition moved up before it's used in JSX
+  function getInputClassname() {
+    let className =
+      'w-full outline-none h-9 appearance-none text-2xl bg-transparent text-white placeholder-gray-500'
+    return className
+  }
+
   return (
     <div className='flex flex-col'>
       <div className='flex justify-between items-center mb-1'>
@@ -22,6 +29,7 @@ const SwapField = React.forwardRef(({ obj }, inputRef) => {
           {id === 'srcToken' ? 'You Pay' : 'You Receive'}
         </label>
         <div className='text-xs text-gray-500'>
+          Balance: 0.00
         </div>
       </div>
       
@@ -29,21 +37,21 @@ const SwapField = React.forwardRef(({ obj }, inputRef) => {
         <input
           ref={inputRef}
           className={getInputClassname()}
-          type={'number'}
+          type="number"
           value={value}
-          placeholder={'0.0'}
-          onChange={e => {
-            setValue(e.target.value)
-          }}
+          placeholder="0.0"
+          onChange={(e) => setValue(e.target.value)}
         />
 
-        {/* Make sure required props are passed to Selector */}
-        <Selector
-          id={id || 'tokenSelector'} // Ensure id is not undefined
-          setToken={setToken}
-          defaultValue={defaultValue}
-          ignoreValue={ignoreValue}
-        />
+        {/* Pass required props to Selector */}
+        {defaultValue && (
+          <Selector
+            id={id || 'tokenSelector'} 
+            setToken={setToken}
+            defaultValue={defaultValue}
+            ignoreValue={ignoreValue}
+          />
+        )}
       </div>
       
       <div className='flex justify-end mt-1'>
@@ -58,12 +66,6 @@ const SwapField = React.forwardRef(({ obj }, inputRef) => {
       </div>
     </div>
   )
-
-  function getInputClassname() {
-    let className =
-      'w-full outline-none h-9 appearance-none text-2xl bg-transparent text-white placeholder-gray-500'
-    return className
-  }
 })
 
 // Add displayName for easier debugging
