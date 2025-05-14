@@ -1,20 +1,38 @@
 # TheSwap: Pokémon-Themed Token Exchange
 
-PokéSwap is a decentralized exchange platform focused on Pokémon-themed ERC20 tokens. Built with Next.js, Solidity, and TailwindCSS, this project demonstrates Web3 development skills and provides a fun, themed trading experience.
+**TheSwap** is a fully functioning decentralized exchange (DEX) I built from scratch to demonstrate full-stack Web3 development expertise. This project enables users to mint and swap Pokémon-themed ERC20 tokens through an intuitive interface with real blockchain integration.
 
 ![TheSwap Screenshot](./public/TheSwap-screenshot.png)
 
-## Features
+## 🔧 Technical Implementation
 
-- **Swap Pokémon Tokens**: Exchange between various Pokémon-themed ERC20 tokens or ETH
-- **Token Portfolio**: View your token balances and portfolio value
-- **Real-time Balance Updates**: See your wallet balances update in real-time
-- **Interactive UI**: Smooth animations and transitions for a modern user experience
-- **Mobile Responsive**: Fully responsive design works on all device sizes
+### 🛠️ Core Development Skills
+- **Smart Contracts**: Developed 8 custom ERC20 tokens (Pika USD, Bulba Coin, etc.) using Solidity
+- **DEX Engine**: Built swapping functionality with `CustomDex.sol` (Hardhat)
+- **Web3 Integration**: Wallet connection via ethers.js/wagmi (supports MetaMask, Coinbase Wallet, WalletConnect)
+- **Frontend**: Next.js with TailwindCSS for responsive design
+- **Blockchain**: Live transactions on Holesky testnet
+
+### 🚀 Key Features
+
+✅ **Token System**
+- Minted initial supply on contract deployment
+- 8 Pokémon-themed tokens with custom branding
+
+✅ **Exchange Functionality**
+- ETH ↔ Token swaps
+- Token ↔ Token exchanges
+- Real-time price calculations
+
+✅ **User Experience**
+- Wallet balance tracking
+- Transaction history log
+- Mobile-responsive interface
+- Real-time balance updates
 
 ## Pokémon Token Collection
 
-PokéSwap features various Pokémon-themed tokens:
+TheSwap features these custom Pokémon-themed tokens:
 
 - **Pika USD**: Pikachu-themed stablecoin
 - **Bulba Coin**: Grass-type token
@@ -27,7 +45,7 @@ PokéSwap features various Pokémon-themed tokens:
 
 ## Project Tech Stack
 
-- **Frontend**: Next.js, React, TailwindCSS, Framer Motion
+- **Frontend**: Next.js, React, TailwindCSS
 - **Smart Contracts**: Solidity, Hardhat
 - **Web3 Integration**: ethers.js, wagmi
 - **Network**: Holesky Testnet
@@ -38,7 +56,7 @@ Deployed site - TheSwap: [TheSwap](https://theswap-two.vercel.app/)
 
 ## Installation
 
-Follow these steps to run the PokéSwap project locally:
+Follow these steps to run TheSwap project locally:
 
 ### Prerequisites
 
@@ -96,7 +114,7 @@ The project includes the following main smart contracts:
 To test the application, you'll need Holesky testnet ETH:
 
 1. Get testnet ETH from [Holesky Faucet](https://faucet.holesky.ethpandaops.io/)
-2. Connect your wallet to PokéSwap
+2. Connect your wallet to TheSwap
 3. Use the swap feature to exchange ETH for Pokémon tokens
 
 ## Development
