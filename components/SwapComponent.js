@@ -94,7 +94,7 @@ const SwapComponent = () => {
     )
       populateOutputValue(inputValue);
 
-    setSrcTokenComp(<SwapField obj={srcTokenObj} ref={inputValueRef} />);
+    setSrcTokenComp(<SwapField obj={srcTokenObj} ref={inputValueRef} className='z-10' />);
 
     if (inputValue?.length === 0) setOutputValue("");
   }, [inputValue, destToken, mounted]);

@@ -1,4 +1,4 @@
-# PokéSwap: Pokémon-Themed Token Exchange
+# TheSwap: Pokémon-Themed Token Exchange
 
 PokéSwap is a decentralized exchange platform focused on Pokémon-themed ERC20 tokens. Built with Next.js, Solidity, and TailwindCSS, this project demonstrates Web3 development skills and provides a fun, themed trading experience.
 
