@@ -99,8 +99,7 @@ npm run dev
 
 The project includes the following main smart contracts:
 
-- **CustomToken.sol**: ERC20 token implementation for Pokémon tokens
-- **CustomDex.sol**: DEX contract handling token swaps and liquidity
+- **CustomEx.sol**: ERC20 token implementation for Pokémon tokens & DEX contract handling for token swaps and liquidity
 
 ### Contract Addresses (Holesky Testnet)
 
