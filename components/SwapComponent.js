@@ -7,7 +7,6 @@ import {
   swapTokenToToken,
 } from "../utils/context";
 
-import { CogIcon } from "@heroicons/react/outline";
 import { ChevronDoubleDownIcon } from "@heroicons/react/solid";
 import SwapField from "./SwapField";
 import TransactionStatus from "./TransactionStatus";
@@ -66,9 +65,11 @@ const SwapComponent = () => {
 
   const { address } = useAccount();
 
+  // Fix for SSR with framer-motion - use dynamic import
+  // This ensures Framer Motion only loads client-side
   useEffect(() => {
     setMounted(true);
-    console.log("Component mounted");
+    console.log("SwapComponent mounted");
     
     // Initialize with valid tokens to prevent dropdown errors
     if (destToken === DEFAULT_VALUE) {
@@ -95,7 +96,12 @@ const SwapComponent = () => {
     )
       populateOutputValue(inputValue);
 
-    setSrcTokenComp(<SwapField obj={srcTokenObj} ref={inputValueRef} />);
+    // Ensure the SwapField is directly rendered with the props
+    setSrcTokenComp(
+      <div className="bg-gray-800 rounded-xl p-4">
+        <SwapField obj={srcTokenObj} ref={inputValueRef} />
+      </div>
+    );
 
     if (inputValue?.length === 0) setOutputValue("");
   }, [inputValue, destToken, mounted]);
@@ -110,7 +116,12 @@ const SwapComponent = () => {
     )
       populateInputValue(outputValue);
 
-    setDestTokenComp(<SwapField obj={destTokenObj} ref={outputValueRef} />);
+    // Ensure the SwapField is directly rendered with the props
+    setDestTokenComp(
+      <div className="bg-gray-800 rounded-xl p-4">
+        <SwapField obj={destTokenObj} ref={outputValueRef} />
+      </div>
+    );
 
     if (outputValue?.length === 0) setInputValue("");
 
@@ -123,56 +134,73 @@ const SwapComponent = () => {
     return <div className="h-96 w-full bg-gray-800 rounded-2xl animate-pulse"></div>;
   }
 
+  // Safe framer-motion variants that work in production
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.3 } }
+  };
+
+  const topFieldVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+  };
+
+  const bottomFieldVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, delay: 0.1 } }
+  };
+
   return (
-    <div className="border-none rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 w-full p-1 shadow-lg shadow-teal-900/20 relative" style={{ zIndex: 50 }}>
-      <div className="bg-gray-900 rounded-2xl p-6 shadow-2xl relative" style={{ zIndex: 50 }}>
+    <motion.div 
+      className="border-none rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 w-full p-1 shadow-lg shadow-teal-900/20"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <div className="bg-gray-900 rounded-2xl p-6 shadow-2xl relative">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white">Swap Now!</h2>
-          <div className="flex items-center space-x-2">
-            
-          </div>
         </div>
         
-        <div className="relative" style={{ zIndex: 60 }}>
+        <div className="space-y-10 relative">
+          {/* First swap field */}
           <motion.div 
-            className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300 relative"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{ zIndex: 60 }}
+            variants={topFieldVariants}
+            className="relative"
           >
             {srcTokenComp}
           </motion.div>
           
-          {/* Centered arrow that overlaps both boxes */}
-          <div className="absolute left-1/2 top-full transform -translate-x-1/2 -translate-y-1/2" style={{ zIndex: 70 }}>
-            <motion.div 
-              className="p-2 bg-teal-500 rounded-full cursor-pointer hover:bg-teal-400 transition-all duration-300"
-              whileHover={{ scale: 1.1 }}
-              animate={{ rotate: isRotating ? 180 : 0 }}
-              transition={{ duration: 0.1 }}
-              onClick={handleReverseExchange}
-            >
-              <ChevronDoubleDownIcon className="h-5 w-5 text-gray-900" />
-            </motion.div>
+          {/* Center Arrow - using standard div for the container to ensure it works */}
+          <div className="h-0 relative">
+            <div className="absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2 z-10">
+              <motion.button 
+                className="p-2 bg-teal-500 rounded-full cursor-pointer hover:bg-teal-400 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                animate={{ rotate: isRotating ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={handleReverseExchange}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <ChevronDoubleDownIcon className="h-5 w-5 text-gray-900" />
+              </motion.button>
+            </div>
           </div>
+          
+          {/* Second swap field */}
+          <motion.div 
+            variants={bottomFieldVariants}
+            className="relative"
+          >
+            {destTokenComp}
+          </motion.div>
         </div>
 
-        <motion.div 
-          className="bg-gray-800 rounded-xl p-4 border-2 border-transparent hover:border-teal-500 transition-all duration-300 mt-2 relative"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          style={{ zIndex: 60 }}
-        >
-          {destTokenComp}
-        </motion.div>
-
-        <div className="mt-8 relative" style={{ zIndex: 50 }}>
+        <div className="mt-8">
           <motion.button
             className={getSwapBtnClassName()}
-            whileHover={{ scale: swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE ? 1.02 : 1 }}
-            whileTap={{ scale: swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE ? 0.98 : 1 }}
+            whileHover={swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE ? { scale: 1.02 } : {}}
+            whileTap={swapBtnText === SWAP || swapBtnText === INCREASE_ALLOWANCE ? { scale: 0.98 } : {}}
             onClick={() => {
               if (swapBtnText === INCREASE_ALLOWANCE) handleIncreaseAllowance();
               else if (swapBtnText === SWAP) handleSwap();
@@ -183,17 +211,14 @@ const SwapComponent = () => {
         </div>
 
         {txPending && <TransactionStatus />}
-
+        
         <Toaster />
         
         <div className="mt-4 text-xs text-gray-500 text-center">
          Your One Click Solution To Swapping Pokémon Tokens!
         </div>
       </div>
-      
-      {/* Overlay div to ensure proper dropdown rendering */}
-      <div id="dropdown-portal" className="absolute top-0 left-0 w-full" style={{ zIndex: 1000 }}></div>
-    </div>
+    </motion.div>
   );
 
   async function handleSwap() {
@@ -220,7 +245,8 @@ const SwapComponent = () => {
     setSwapBtnText(SWAP);
   }
 
-  function handleReverseExchange(e) {
+  function handleReverseExchange() {
+    console.log("Reversing exchange...");
     // Setting the isReversed value to prevent the input/output values
     // being calculated in their respective side - effects
     isReversed.current = true;
@@ -230,11 +256,15 @@ const SwapComponent = () => {
 
     // 1. Swap tokens (srcToken <-> destToken)
     // 2. Swap values (inputValue <-> outputValue)
-    setInputValue(outputValue);
-    setOutputValue(inputValue);
-
-    setSrcToken(destToken);
-    setDestToken(srcToken);
+    const tempInput = inputValue;
+    const tempOutput = outputValue;
+    const tempSrcToken = srcToken;
+    const tempDestToken = destToken;
+    
+    setInputValue(tempOutput);
+    setOutputValue(tempInput);
+    setSrcToken(tempDestToken);
+    setDestToken(tempSrcToken);
   }
 
   function getSwapBtnClassName() {
